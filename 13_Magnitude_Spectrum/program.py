@@ -1,34 +1,36 @@
-"""
-Program 13: Magnitude Spectrum
-Computes the DFT and centered magnitude spectrum of a grayscale
-image, applying log scaling for visualization, and saves it.
-"""
-
 import cv2
 import numpy as np
 
-# Read image and convert to grayscale
 img = cv2.imread("input.jpg")
+
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-# Compute the DFT
-gray_float = np.float32(gray)
-dft = cv2.dft(gray_float, flags=cv2.DFT_COMPLEX_OUTPUT)
+gray = np.float32(gray)
 
-# Center the low frequencies
-dft_shifted = np.fft.fftshift(dft)
+dft = cv2.dft(
+    gray,
+    flags=cv2.DFT_COMPLEX_OUTPUT
+)
 
-# Compute magnitude from the real and imaginary parts
-magnitude = cv2.magnitude(dft_shifted[:, :, 0], dft_shifted[:, :, 1])
+shifted = np.fft.fftshift(dft)
 
-# Apply log scaling so the wide dynamic range becomes visible
-magnitude_spectrum = 20 * np.log(magnitude + 1)
+magnitude = cv2.magnitude(
+    shifted[:, :, 0],
+    shifted[:, :, 1]
+)
 
-# Normalize to 0-255 for saving as an image
-magnitude_spectrum = cv2.normalize(magnitude_spectrum, None, 0, 255, cv2.NORM_MINMAX)
-magnitude_spectrum = np.uint8(magnitude_spectrum)
+spectrum = 20 * np.log(magnitude + 1)
 
-# Save the magnitude spectrum
-cv2.imwrite("output.png", magnitude_spectrum)
+spectrum = cv2.normalize(
+    spectrum,
+    None,
+    0,
+    255,
+    cv2.NORM_MINMAX
+)
 
-print("Magnitude spectrum computed and saved.")
+spectrum = np.uint8(spectrum)
+
+cv2.imwrite("output.png", spectrum)
+
+print("Magnitude spectrum saved")

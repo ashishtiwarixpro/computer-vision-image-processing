@@ -1,28 +1,18 @@
-"""
-Program 10: Image Sharpening Using a Custom Kernel
-Creates a sharpening kernel and applies it using cv2.filter2D().
-"""
-
 import cv2
 import numpy as np
 
-# Read the input image
 img = cv2.imread("input.jpg")
 
-# Custom sharpening kernel:
-# Center weight (9) boosts the current pixel while the surrounding
-# -1's subtract neighboring pixel values, emphasizing edges/details.
-# The weights sum to 1 so overall image brightness is preserved.
-sharpening_kernel = np.array([
-    [ 0, -1,  0],
-    [-1,  9, -1],
-    [ 0, -1,  0]
+kernel = np.array([
+    [0, -1, 0],
+    [-1, 9, -1],
+    [0, -1, 0]
 ])
 
-# Apply the kernel using filter2D
-sharpened = cv2.filter2D(img, -1, sharpening_kernel)
+result = cv2.filter2D(img, -1, kernel)
 
-# Save the sharpened result
-cv2.imwrite("output.png", sharpened)
+cv2.imwrite("output.png", result)
 
-print("Sharpening kernel used:\n", sharpening_kernel)
+print("Sharpening completed")
+print("Kernel:")
+print(kernel)
